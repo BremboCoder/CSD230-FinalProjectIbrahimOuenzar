@@ -1,3 +1,7 @@
+//Ibrahim Ouenzar
+//CSD230
+//Final Project
+
 package com.example.appfinalproj;
 
 import android.net.Uri;

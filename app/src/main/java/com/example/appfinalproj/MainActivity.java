@@ -1,8 +1,13 @@
+//Ibrahim Ouenzar
+//CSD230
+//Final Project
+
 package com.example.appfinalproj;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
 
+
          if (inputManager != null ) {
             inputManager.hideSoftInputFromWindow(view.getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
@@ -49,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         if (networkInfo != null && networkInfo.isConnected()
                 && queryString.length() != 0) {
             Log.d("MainActivity", "Starting FetchBook...");
-            new FetchBook(mTitleText, mAuthorText).execute(queryString);
+            new FetchBook(this::onFetchBookComplete).execute(queryString);
             mAuthorText.setText("");
             mTitleText.setText(R.string.loading);
         } else {
@@ -61,5 +67,12 @@ public class MainActivity extends AppCompatActivity {
                 mTitleText.setText(R.string.no_network);
             }
         }
+
+    }
+
+    private void onFetchBookComplete(String jsonResponse) {
+        Intent intent = new Intent(MainActivity.this, ResultsActivity.class);
+        intent.putExtra("json_response", jsonResponse);
+        startActivity(intent);
     }
 }

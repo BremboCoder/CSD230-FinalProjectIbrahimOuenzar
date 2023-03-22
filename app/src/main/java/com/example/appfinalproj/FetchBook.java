@@ -5,12 +5,18 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class FetchBook {
 
     private WeakReference<TextView> mTitleText;
     private WeakReference<TextView> mAuthorText;
 
+    private Consumer<String> mOnPostExecute;
+
+    FetchBook(Consumer<String> onPostExecute) {
+        this.mOnPostExecute = onPostExecute;
+    }
     FetchBook(TextView titleText, TextView authorText) {
         this.mTitleText = new WeakReference<>(titleText);
         this.mAuthorText = new WeakReference<>(authorText);
@@ -19,7 +25,7 @@ public class FetchBook {
     void execute(String queryString) {
         Log.d("FetchBook", "Starting network request...");
         CompletableFuture.supplyAsync(() -> NetworkUtils.getBookInfo(queryString))
-                .thenAcceptAsync(this::onPostExecute);
+                .thenAcceptAsync(mOnPostExecute);
     }
 
     protected void onPostExecute(String s) {
